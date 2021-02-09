@@ -21,8 +21,6 @@ let datos = [];
 
 
 const validateEmailDuplicate = async (req, res, next) => {
-    //Como seleccionar los mails que se encuentran dentro de una base de datos????????????????????????
-    //console.log(response);
     let email = req.body.email;
     debugger;
     let datos = await sequelize.query(`SELECT * FROM register WHERE email = '${email}'`, { type: sequelize.QueryTypes.SELECT } );
