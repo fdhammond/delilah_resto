@@ -1,0 +1,728 @@
+openapi: 3.0.0
+info:
+  description: Delilah Resto API
+  version: "1.0.0"
+  title: Delilah Resto API
+  externalDocs:  
+    url: https://github.com/fdhammond/delilah_resto
+  contact:
+    email: federico.hammond8@gmail.com
+    version: 1.0.0
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  servers:
+    - url: https://localhost:3000/v1
+    - url: http://localhost:3000/v1
+tags:
+  - name: User
+    description: User data to work with
+  - name: Menus
+    description: Menus data to work with
+  - name: Orders
+    description: Orders data to work with
+
+paths:
+  /users:
+    post:
+      tags:
+        - User
+      summary: Create User
+      description: Create new User        
+      operationId: createUser
+      requestBody:
+        description: Create user Obj
+        content: 
+        application/json:
+        schema:
+          $ref: "#/components/schemas/User"
+        required: true
+      security: []
+      responses:
+        '200':
+          description: Username Added to Database
+        '400':
+          description: Bad input parameter validation   
+        '409':
+          description: Username already in use
+          default: 
+            $ref: "#/components/responses/Default"
+      get:
+        tags:
+          - User
+        summary: (Admin) get list of users / (User) get account info
+        description: Only gets all data of users if admin. If user gets only accounts info
+        operationId: getUserInfo
+        responses:
+        '200':
+          description: Success
+          content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInfo"
+        '401':
+          $ref: "#/components/responses/NotAllowed"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        default:
+          $ref: "#/components/responses/Default"
+
+      put: 
+        tags: 
+          - User
+        summary: Update user data (active)
+        operationd: editUser
+        requestBody:
+          description: Change data
+          content:
+            application/json:
+              schema: 
+                allOf:
+                 $ref: "#/components/schemas/User"
+        responses:
+          '200':
+            description: Success
+          '400':
+            description: Username/password invalid
+          '401':
+          $ref: "#/components/responses/NotAllowed"
+          '404':
+          $ref: "#/components/responses/NotFound"
+          '409':
+            description: Username / email on use
+          default:
+          $ref: "#/components/responses/Default"
+      
+      delete:
+        tags:
+          - User
+        summary: Delete user
+        operationId: deleteUser
+        responses:
+        '200':
+          description: User deleted
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        default:
+          $ref: '#/components/responses/Default'
+
+  /users/login:
+      get:
+        tags:
+          - User
+        security: []
+        summary: User logging
+        operationId: userLogin
+        parameters:
+          - name: email / username
+          in: query
+          description: Email or Username to log
+          required: true
+          schema:
+            type: string
+          - name: password
+          in: query
+          description: Log password
+          required: true
+          schema:
+            type: string
+        responses: 
+        '200':
+        description: Success
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Token"
+        '400':
+          description: Username / password not valid
+        '401':
+          $ref: "#/components/responses/Disabled"
+          default:
+          $ref: "#/components/responses/Default"
+          
+    /users/:id:
+        get:
+          tags:
+            - User
+          summary: Get user by id (admin allowed)
+          operationId: getUserById
+          parameters:
+            - name: id
+              in: path
+              description: User's id must be in fetch
+              required: true
+              schema: 
+                type: string
+              responses:
+              '200':
+                description: Success
+                content: 
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/UserInfo"
+              '401':
+              $ref: "#/components/responses/Unauthorized"
+              '404':
+              $ref: "#/components/responses/NotFound"
+              default:
+              $ref: '#/components/responses/Default'
+          
+          put:
+            tags:
+              - User
+            summary: Edit by id (admin allowed)
+            description: Edit user by id only admin allowed
+            operationId: updateUserByAdmin
+            parameters:
+              - name: username
+                in: path
+                description: update name
+                required: true
+                schema:
+                  type: string
+            requestBody:
+              description: User obj to update
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/User'
+            responses:
+              '200':
+                description: "User {username} updated"
+              '401': 
+                $ref: '#/components/responses/Unauthorized'
+              '404':
+                $ref: '#/components/responses/NotFound'
+              default:
+                $ref: "#/components/responses/Default"
+          
+          delete:
+            tags: 
+              - User
+              summary: Delete user (admin allowed)
+              description: This can only be done by a logged in admin.
+              operationId: deleteUserAdmin
+              parameters:
+                - name: username
+                  in: path
+                  description: Username to delete
+                  required: true
+                  schema:
+                    type: string
+              responses:
+                200:
+                  description: "User {username} was disabled correctly"
+                401:
+                  $ref: "#/components/responses/Unauthorized"
+                404:
+                  $ref: "#/components/responses/NotFound"
+                default:
+                  $ref: "#/components/responses/Default"
+    /menu:
+        get: 
+          tags:
+            - Menus
+          summary: Display all menus
+          description: List all products (allowed)
+          operationId: getMenus
+          parameters:
+            - name: search
+              in: query
+              description: Menu to search
+              schema:
+                type: string
+          responses:
+            '200':
+                description: Success
+                content: 
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/Menus"
+            '401':
+                $ref: "#/components/responses/Unauthorized"
+            '404':
+                $ref: "#/components/responses/NotFound"
+            default:
+                $ref: "#/components/responses/Default"
+
+        post:
+          tags:
+            - Menus
+          summary: Add new menu (admin allowed)
+          description: Add meny to database
+          operationId: addMenu
+          requestBody:
+            description: Menu to search
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Menu"
+          required: true
+          responses:
+            '200':
+              description: Menu added Successfully
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items: 
+                      type: integer
+                      example: 4
+            '400':
+              description: Input data error on validation
+            '401':
+              $ref: "#/components/responses/Unauthorized"
+              default:
+                $ref: "#/components/responses/Default"
+
+          /menu/:id:
+            get: 
+              tags:
+                - Menus
+            summary: Display menu by id
+            description: Display menu selected by id
+            parameters:
+              - name: id
+                in: path
+                description: Id of selected menu
+                required: true
+                schema:
+                  type: string
+            operationId: getMenyById
+            responses:
+              '200':
+                description: Success
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/Menu"
+              '400':
+                description: Input data error on validation
+              '401':
+                $ref: "#/components/responses/Unauthorized"
+              '404':
+                $ref: "#/components/responses/NotFound"
+              default:
+                $ref: "#/components/responses/Default"                    
+            
+            put:
+              tags:
+                - Menus
+              summary: Edit menu by id (admin allowed)
+              description: Edit menu by id, need fetch
+              parameters:
+                - name: id
+                  in: path
+                  description: Menu id, need fetch
+                  required: true
+                  schema:
+                    type: string
+              operationId: editMenu
+              requestBody:
+                description: Modification data
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/Menu"
+                required: true
+              responses:
+                '200':
+                  description: "Menu with id {menuId} edited correctly"
+                '400':
+                  description: Error validating input data
+                '401':
+                  $ref: "#/components/responses/Unauthorized"
+                '404':
+                  $ref: "#/components/responses/NotFound"
+                default:
+                  $ref: "#/components/responses/Default"
+              
+              delete:
+                tags:
+                  - Menus
+                summary: Delete menu by id (admin allowed)
+                description: Delete menu, need fetch
+                parameters:
+                  - name: id
+                    in: path
+                    description: Menu id, need fetch.
+                    required: true
+                    schema:
+                      type: string
+                operationId: deleteMenu
+                responses:
+                  '200':
+                    description: "Menu with id ${menuId} was deleted correctly"
+                  '401':
+                    $ref: "#/components/responses/Unauthorized"
+                  '404':
+                    $ref: "#/components/responses/NotFound"
+                  default:
+                    $ref: "#/components/responses/Default"
+            
+          /orders:
+            get:
+              tags:
+                - Orders
+              summary: Display all orders
+              description: Display all orders (admin allowed). If user only returns user's orders.
+              operationId: getOrders
+              responses:
+                '200':
+                  description: Success
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/Orders"
+                '401':
+                  $ref: "#/components/responses/Unauthorized"
+                '404':
+                  $ref: "#/components/responses/NotFound"
+                default:
+                  $ref: "#/components/responses/Default"
+
+            post:
+              tags:
+                - Orders
+              summary: Add new order
+              description: Add new menu to database
+              operationId: addOrder
+              requestBody:
+                description: Order to create
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/NewOrder"
+                required: true
+              responses:
+                '200':
+                  description: Order modified Successfully
+                '400':
+                  description: Input data error on validation
+                '401':
+                  $ref: "#/components/responses/Unauthorized"
+                default:
+                  $ref: "#/components/responses/Default"
+
+          /orders/:id:
+            get:
+              tags:
+                - Orders
+              summary: Display menu by id (admin allowed)
+              parameters:
+                - name: id
+                  in: path
+                  description: Order's id, need fetch.
+                  required: true
+                  schema:
+                    type: string
+              description: Return specific menu by id, need fetch by id.
+              operationId: getOrderById
+              responses:
+                '200':
+                  description: Success
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/Orders"
+                '401':
+                  $ref: "#/components/responses/Unauthorized"
+                '404':
+                  $ref: "#/components/responses/NotFound"
+                default:
+                  $ref: "#/components/responses/Default"
+
+            put:
+              tags:
+                - Orders
+              summary: Display menu by id
+              description: Edits a specific menu
+              operationId: editOrder
+              parameters:
+                - name: id
+                  in: path
+                  description: Order's id, needs fetch
+                  required: true
+                  schema:
+                    type: string
+              requestBody:
+                description: Order to be created
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        orderStatus:
+                          type: string
+                          example: delivered
+                required: true
+              responses:
+                '200':
+                  description: "Menu with id {menuId} modified correctly"
+                '400':
+                  description: Input data error on validation
+                '401':
+                  $ref: "#/components/responses/Unauthorized"
+                '403':
+                  description: Menu's state received is not valid
+                '404':
+                  $ref: "#/components/responses/NotFound"
+                default:
+                  $ref: "#/components/responses/Default"
+
+#########################################################################
+components:
+  schemas:
+    User:
+      type: object      
+      properties:        
+        id:
+        type: integer
+        format: int64
+        example: 054
+        username:
+          type: string
+          example: john_snow
+        password:
+          type: string
+          example: password123        
+        mail: 
+          type: string
+          example: john@gmail.com
+        adress: 
+          type: string
+          example: Clarin 2020
+        fullname:
+          type: string
+          example: John Snow
+        phone:
+          type: integer
+          example: 11543456789
+        
+        UserInfo:
+          type: array
+          items: 
+          type: object
+          properties:
+            user_id:
+              type: integer
+              example: 22
+            username:
+              type: string
+              example:  john_snow_22
+            full_name:
+              type: string
+              example: John Sun
+            mail:
+              type: string
+              example: john_sun@gmail.com
+            adress:
+              type: string
+              example: Rivadavia 2020
+            phone: 
+              type: integer
+              example: 1154987654
+            account_disabled:
+              type: boolean
+              example: 0
+            account_admin:
+              type: boolean
+              example: 0                          
+    
+          Menu:
+            type: object
+            properties:
+              product_id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: Cheese Hamburger
+              price:
+                type: number
+                example: 500.40
+              description:
+                type: string
+                example: Delicious cheese hamburger with bacon
+              is_disabled:
+                type: boolean
+                example: 0
+            
+            Menus:
+              type: array
+              items:
+                $ref: "#/components/schemas/Menu"
+
+            OrderMenu:
+              type: object
+              properties:
+                order_menu_id:
+                  type: integer
+                  example: 054
+                order_id:
+                  type: integer
+                  example: 2
+                menu_id:
+                  type: integer
+                  example: 30
+                menu_amount:
+                  type: integer
+                  example: 20
+                name:
+                  type: string
+                  example: Cheese Hamburger
+                price:
+                  type: number
+                  example: 500.40
+                description:
+                  type: string
+                  example: Delicious cheese hamburger with bacon
+                is_disabled:
+                  type: boolean
+                  example: 0
+            
+            OrderMenus:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrderMenu"      
+
+            Order:
+              type: object
+              properties:
+                order_id:
+                  type: integer
+                  example: 6
+                status:
+                  type: string
+                  example: arrived
+                date:
+                  type: string
+                  format: date-time
+                  example: "2020-04-10T10:11:12Z"
+                description:
+                  type: string
+                  example: "1x CheeseHamburger"
+                payment_method:
+                  type: string
+                  example: credit card
+                total:
+                  type: integer
+                  example: 800
+                user_id:
+                  type: integer
+                  example: 6
+                username:
+                  type: string
+                  example: john_snow
+                full_name:
+                  type: string
+                  example: "John Snow"
+                mail:
+                  type: string
+                  example: john_snow@gmail.com
+                phone:
+                  type: integer
+                  example: 1154954323
+                adress:
+                  type: string
+                  example: Alem 444
+                products:
+                  $ref: "#/components/schemas/OrderMenus"    
+              
+              Orders:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+
+              NewOrder:
+                type: object
+                properties:
+                  payment_method:
+                    type: string
+                    example: credit card
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                          example: 12
+                        amount:
+                          type: integer
+                          example: 2
+                ######## REVIEW TOKEN #########
+                Token:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  Error:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                        example: "Error ocurred: <error>"
+                    required:
+                      - error
+                  Send:
+                    type: string
+                    example: "Error message"
+                    
+                securitySchemes:
+                  bearerAuth:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+
+                # Reused Responses
+                responses:
+                  UnauthorizedError:
+                    description: Invalid Token
+                  Disabled:
+                    description: Invalid request, account is disabled/deleted
+                  NotAdmin:
+                    description: Not an admin, not allowed
+                  NotFound:
+                    description: Resource was not found
+                  Default:
+                    description: Unexpected error
+                    content:
+                      application/json:
+                        schema:
+                          $ref: "#/components/schemas/Error"
+                  Unauthorized:
+                    description: Unauthorized
+                    content:
+                      application/json:
+                        schema:
+                          oneOf:
+                            - $ref: "#/components/schemas/Send"
+                        examples:
+                          Token Invalidation:
+                            summary: Unauthorized - Invalid Token
+                            value: Unauthorized - Invalid Token
+                          Disabled Account:
+                            summary: Unauthorized - Account is Disabled
+                            value: Unauthorized - User account is disabled
+                  UnauthorizedAdmin:
+                    description: Unauthorized
+                    content:
+                      application/json:
+                        schema:
+                          oneOf:
+                            - $ref: "#/components/schemas/Send"
+                        examples:
+                          Token Invalidation:
+                            summary: Unauthorized - Invalid Token
+                            value: Unauthorized - Invalid Token
+                          Disabled Account:
+                            summary: Unauthorized - Account is Disabled
+                            value: Unauthorized - User account is disabled
+                          Not Admin:
+                            summary: Unauthorized - Not an admin
+                            value: Unauthorized - Not an admin
+
+security:
+  - bearerAuth: []

@@ -37,18 +37,18 @@ const validateEmailDuplicate = async (req, res, next) => {
 }
 
 
-app.get('/login', async (req, res) => {
+app.get('/users/login', async (req, res) => {
     let response = await sequelize.query("SELECT * FROM user", { type: sequelize.QueryTypes.SELECT } );
     res.send(response);
 });
 
-app.get('/register', async (req, res) => { 
+app.get('/users', async (req, res) => { 
     let response = await sequelize.query(`SELECT * FROM register`, { type: sequelize.QueryTypes.SELECT } );
     console.log(response)
     res.send(response)    
 });
 
-app.post('/register', validateEmailDuplicate, async (req, res) => {    
+app.post('/users', validateEmailDuplicate, async (req, res) => {    
     let name = req.body.name;
     let email = req.body.email;
     let phone = req.body.phone;
@@ -62,7 +62,7 @@ app.post('/register', validateEmailDuplicate, async (req, res) => {
 
 
 
-app.get('/productos', async (req, res) => {
+app.get('/menu', async (req, res) => {
     let response = await sequelize.query("SELECT * FROM product", { type: sequelize.QueryTypes.SELECT } );
     res.send(response);
 });
