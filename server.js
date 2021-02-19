@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const sequelize = require('./database/connection');
 const database = require('./database/connection');
 
@@ -15,6 +16,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rate_limit = require('express-rate-limit');
 const jsonWebToken = require('jsonwebtoken');
+
+const privateKey = process.env.SECRET_KEY;
 
 
 const PORT = process.env.PORT || 3000;
@@ -42,6 +45,7 @@ app.use(logRequest);
 
 let data = [];
 
+//MIDDLEWARES
 
 const validateEmailDuplicate = async (req, res, next) => {
     let email = req.body.email;
@@ -60,6 +64,48 @@ const validateEmailDuplicate = async (req, res, next) => {
    
 }
 
+function requireAuthentication(req, res, next) {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        
+        if(invalidTokens.includes(token))
+            return res.status(400).send('Invalid token');
+        
+        let payload = jsonWebToken.verify(token, privateKey);
+
+        req.user = payload.user;
+        req.token = token;
+        next();
+    }
+    catch(e) {
+        res.status(400).send('User is not authenticated');
+    }
+}
+
+function requiresAnonymous(req, res, next) {
+    const authorization = req.headers.authorization;
+
+    if (!authorization)
+        return next();
+
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+
+        if (invalidTokens.includes(token))
+            return next();
+
+        res.status(400).send("User is authenticated");
+
+    }
+    catch(e) {
+        res.status(400).send("Error validating user is anonymous");
+    }
+}
+
+
+
+// ENDPOINTS
+
 app.get('/users', async (req, res) => { 
     let response = await sequelize.query(`SELECT * FROM register`, { type: sequelize.QueryTypes.SELECT } );
     console.log(response)
@@ -67,9 +113,21 @@ app.get('/users', async (req, res) => {
 });
 
 
-app.get('/users/login', async (req, res) => {
-    let response = await sequelize.query("SELECT * FROM user", { type: sequelize.QueryTypes.SELECT } );
-    res.send(response);
+app.post('/users/login', requiresAnonymous, async (req, res) => {
+    //let response = await sequelize.query("SELECT * FROM user", { type: sequelize.QueryTypes.SELECT } );
+    
+    const {user, password} = req.body;
+    let payload = {
+        name: user,
+        password: password
+
+    }
+        let token = jsonWebToken.sign(payload, privateKey);
+
+
+    res.status(200).send({
+        token: token
+    });
 });
 
 
