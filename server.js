@@ -1,3 +1,4 @@
+require('dotenv').config();
 const sequelize = require('./database/connection');
 const database = require('./database/connection');
 
@@ -10,23 +11,46 @@ sequelize.query("SELECT * FROM details").then( res => {
 
 const express = require('express');
 const body_parser = require('body-parser');
+const cors = require('cors');
+const helmet = require('helmet');
+const rate_limit = require('express-rate-limit');
+const jsonWebToken = require('jsonwebtoken');
+
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+const limiter = rate_limit({
+    windowMs: 1 * 60 * 1000, // 1 min
+    max: 2 //2 req
+});
+
+const logRequest = (req, res, next) => {
+    console.log('Request Type', req.method)
+    next();
+}
+
+app.use(helmet());
+app.use(cors());
 app.use(body_parser.urlencoded({ extended: false }));
 app.use(body_parser.json());
 
-let datos = [];
+app.use(limiter);
+app.use(logRequest);
+
+
+
+let data = [];
 
 
 const validateEmailDuplicate = async (req, res, next) => {
     let email = req.body.email;
-    debugger;
-    let datos = await sequelize.query(`SELECT * FROM register WHERE email = '${email}'`, { type: sequelize.QueryTypes.SELECT } );
-    console.log(datos);
+    let data = await sequelize.query(`SELECT * FROM register WHERE email = '${email}'`, 
+    { type: sequelize.QueryTypes.SELECT } );
     
-   if (datos.length == 0) {
+    console.log(data);
+    
+   if (data.length == 0) {
        next();
    } else {
        res.status(400).send({
@@ -137,7 +161,6 @@ app.get('/', (req, res) => {
     });    
 });
 */
-
 
 app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
