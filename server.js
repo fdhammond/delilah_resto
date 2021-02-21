@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const sequelize = require('./database/connection');
-const database = require('./database/connection');
+
 
 //Es un objeto sequelize = new Sequelize;
 /*
@@ -16,6 +16,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rate_limit = require('express-rate-limit');
 const jsonWebToken = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const privateKey = process.env.SECRET_KEY;
 
@@ -107,27 +108,9 @@ function requiresAnonymous(req, res, next) {
 // ENDPOINTS
 
 app.get('/users', async (req, res) => { 
-    let response = await sequelize.query(`SELECT * FROM register`, { type: sequelize.QueryTypes.SELECT } );
+    //let response = await sequelize.query(`SELECT * FROM register`, { type: sequelize.QueryTypes.SELECT } );
     console.log(response)
     res.send(response)    
-});
-
-
-app.post('/users/login', requiresAnonymous, async (req, res) => {
-    //let response = await sequelize.query("SELECT * FROM user", { type: sequelize.QueryTypes.SELECT } );
-    
-    const {user, password} = req.body;
-    let payload = {
-        name: user,
-        password: password
-
-    }
-        let token = jsonWebToken.sign(payload, privateKey);
-
-
-    res.status(200).send({
-        token: token
-    });
 });
 
 
@@ -135,12 +118,35 @@ app.post('/users', validateEmailDuplicate, async (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
     let phone = req.body.phone;
-    let adress = req.body.adress;
-    let password = req.body.password;    
+    let adress = req.body.adress; 
+    //pw encrypt
+    let password = bcrypt.hashSync(req.body.password, 10);
+
     let values = [name, email, phone, adress, password];
+
     let query = `INSERT INTO register (name_complete, email, phone, adress, password) VALUES (?, ?, ?, ?, ?)`
     let response = await sequelize.query(query, { replacements: values });
     res.send(response);
+});
+
+
+app.post('/users/login', requiresAnonymous, async (req, res) => {
+    
+
+    let email = req.body.email;
+    let password = req.body.password;
+
+    if(email == null) {
+        res.status(400).send(
+            JSON.stringify({ "error": "Please enter email..." })
+        )
+    } else if (email == email && password == password) {
+    let response = await sequelize.query("SELECT email, password FROM register", { type: sequelize.QueryTypes.SELECT } );
+       res.status(200).send(
+            JSON.stringify({ "msg": "Logged Successfully..." })
+        );    
+    }
+
 });
 
 
