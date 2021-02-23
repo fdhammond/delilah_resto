@@ -41,7 +41,7 @@ const createToken = (user) => {
     const payload = {
         usuarioId: user.id,
         createdAt: moment().unix(),
-        expiredAt: moment().add(5, 'minutes').unix()
+        expiredAt: moment().add(12, 'hours').unix()
     }
 
     return jwt.encode(payload, 'frase secreta');
