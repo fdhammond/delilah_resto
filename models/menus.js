@@ -17,7 +17,7 @@ module.exports = (sequelize, type) => {
     {
         name: 'Hamburguesa Clásica',
         price: 350
-    },
+    },-
     {
         name: 'Sandwich Veggie',
         price: 310

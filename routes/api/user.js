@@ -23,7 +23,7 @@ router.post('/register', [
 });
 
 router.post('/login', async (req, res) => {
-    const user = await User.findOne({ where: { email: req.body.email, password: req.body.password, name: req.body.name } });
+    const user = await User.findOne({ where: { email: req.body.email} });
     if (user) {
         //Comparo password que viene en el body y la encriptada
         const equals = bcrypt.compareSync(req.body.password, user.password)
