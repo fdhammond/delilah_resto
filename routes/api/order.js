@@ -12,8 +12,9 @@ router.post('/newOrder', async (req, res) => {
     res.json(order);
 });
 
-router.delete('/deleteOrder', async (req, res) => {
-    const order = await Order.findAll( { where: { state: 'cancel'} } );
+router.delete('/deleteOrder/:id', async (req, res) => {
+    const order = await Order.destroy( { where: { state: 'cancel', id: req.params.id } } );
+    res.json(order);
 })
 
 module.exports = router;
