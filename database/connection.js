@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-
+// CAMBIAR TODAS LAS VARIABLES DE AMBIENTE
 const dialect = "mysql";
 const user = "root";
 const host = "localhost";
@@ -11,7 +11,7 @@ const sequelize = new Sequelize(connection_string);
 sequelize.authenticate().then(() => {
     console.log("Connected");
 }).catch(err => {
-    console.log(err);
+    console.error('Connection error', err);
 });
 
 module.exports = sequelize;

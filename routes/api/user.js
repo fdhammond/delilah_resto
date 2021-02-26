@@ -37,6 +37,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
 const createToken = (user) => {
     const payload = {
         usuarioId: user.id,

@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const sequelize = require('./database/connection');
+const sequelize = require('./database/database');
 
 
 //Es un objeto sequelize = new Sequelize;
