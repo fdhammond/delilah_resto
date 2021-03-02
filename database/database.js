@@ -3,6 +3,8 @@ const Sequelize = require('sequelize');
 const UserModel = require('../models/users');
 const MenuModel = require('../models/menus');
 const OrderModel = require('../models/orders');
+const OrderDetailModel = require('../models/orderDetails');
+
 
 //VER VARIABLES DE ENTORNO ACA.
 const sequelize = new Sequelize('delilah_resto', 'root', '', {
@@ -22,6 +24,13 @@ const sequelize = new Sequelize('delilah_resto', 'root', '', {
 const User = UserModel(sequelize, Sequelize);
 const Menu = MenuModel(sequelize, Sequelize);
 const Order = OrderModel(sequelize, Sequelize);
+const OrderDetail = OrderDetailModel(sequelize, Sequelize);
+
+
+
+User.hasMany(Order, { as: "userId", foreignKey: "user_id"});
+Menu.hasMany(OrderDetail, { as: "menuId", foreignKey: "menu_id"});
+Order.hasMany(OrderDetail, { as: "orderId", foreignKey: "order_id"});
 
 
 sequelize.sync({ force: false })
@@ -32,5 +41,6 @@ sequelize.sync({ force: false })
 module.exports = {
     User,
     Menu,
-    Order
+    Order,
+    OrderDetail
 }

@@ -6,9 +6,7 @@ module.exports = (sequelize, type) => {
             autoIncrement: true
         },
         state: type.ENUM('confirm', 'cancel', 'delivered'),
-        user: type.INTEGER,
         payment_method: type.ENUM('cash', 'card'),
-        menu_id: type.INTEGER,
         createdAt:{
             type: 'TIMESTAMP',
             defaultValue: type.literal('CURRENT_TIMESTAMP(3)'),

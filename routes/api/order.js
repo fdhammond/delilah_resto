@@ -8,7 +8,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/newOrder', async (req, res) => {
-    const order = await Order.create(req.body);
+    
+    const order = await Order.create({
+        user_id: req.body.order.user,
+        payment_method: req.body.order.method
+    });
     res.json(order);
 });
 

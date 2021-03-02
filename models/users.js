@@ -1,14 +1,18 @@
-module.exports = (sequelize, type) => {
+module.exports = (sequelize, DataTypes) => {
     return sequelize.define('user', {
         id: {
-           type: type.INTEGER,
+           type: DataTypes.INTEGER,
            primaryKey: true,
            autoIncrement: true
         },
-        name: type.STRING,
-        email: type.STRING,
-        phone: type.INTEGER,
-        adress: type.STRING,
-        password: type.STRING(150)
+        name: DataTypes.STRING,
+        email: DataTypes.STRING,
+        phone: DataTypes.STRING(10),
+        adress: DataTypes.STRING,
+        password: DataTypes.STRING(150),
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        }
     });
 }

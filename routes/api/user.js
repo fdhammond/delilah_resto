@@ -28,6 +28,7 @@ router.post('/login', async (req, res) => {
         //Comparo password que viene en el body y la encriptada
         const equals = bcrypt.compareSync(req.body.password, user.password)
         if (equals) {
+            console.log(user.dataValues)
             res.json({ success: createToken(user) });
         } else {
             res.json({ error: 'Error in user or password' })
@@ -40,7 +41,7 @@ router.post('/login', async (req, res) => {
 
 const createToken = (user) => {
     const payload = {
-        usuarioId: user.id,
+        usuarioId: user.dataValues,
         createdAt: moment().unix(),
         expiredAt: moment().add(12, 'hours').unix()
     }
