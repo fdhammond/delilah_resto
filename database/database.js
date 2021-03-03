@@ -38,9 +38,20 @@ sequelize.sync({ force: false })
     console.log('Sync Tables')
 });
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+
 module.exports = {
     User,
     Menu,
     Order,
-    OrderDetail
+    OrderDetail,
+    sequelize    
 }

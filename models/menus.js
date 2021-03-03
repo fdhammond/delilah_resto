@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('menu', {
+   const Model = sequelize.define('menu', {
         id: {
             type: type.INTEGER,
             primaryKey: true,
@@ -9,16 +9,15 @@ module.exports = (sequelize, type) => {
         price: type.INTEGER,
         description: type.STRING(250)
     });
-}
-    /*
-    Menu.bulkCreate([{
+  /*
+    Model.bulkCreate([{
         name: 'Bagel de Salmón',
         price: 425
     },
     {
         name: 'Hamburguesa Clásica',
         price: 350
-    },-
+    },
     {
         name: 'Sandwich Veggie',
         price: 310
@@ -41,3 +40,7 @@ module.exports = (sequelize, type) => {
     }
 ]);
 */
+    return Model;
+}
+    
+    

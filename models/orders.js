@@ -5,7 +5,10 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        state: type.ENUM('confirm', 'cancel', 'delivered'),
+        state: {
+            type: type.ENUM('new','confirm', 'cancel', 'delivered'),
+            defaultValue: 'new'
+        },
         payment_method: type.ENUM('cash', 'card'),
         createdAt:{
             type: 'TIMESTAMP',
@@ -18,5 +21,5 @@ module.exports = (sequelize, type) => {
             allowNull: false
         }
     });
-    return Model
+    return Model;
 };
