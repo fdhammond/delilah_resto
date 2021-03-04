@@ -12,8 +12,8 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
   servers:
-    - url: https://localhost:3000/v1
-    - url: http://localhost:3000/v1
+    - url: https://localhost:3000
+    - url: http://localhost:3000
 tags:
   - name: User
     description: User data to work with
@@ -23,7 +23,7 @@ tags:
     description: Orders data to work with
 
 paths:
-  /user:
+  /user/register:
     post:
       tags:
         - User
@@ -59,7 +59,7 @@ paths:
           content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserInfo"
+          $ref: "#/components/schemas/UserInfo"
         '401':
           $ref: "#/components/responses/NotAllowed"
         '404':
@@ -86,13 +86,6 @@ paths:
             description: Username/password invalid
           '401':
           $ref: "#/components/responses/NotAllowed"
-          '404':
-          $ref: "#/components/responses/NotFound"
-          '409':
-            description: Username / email on use
-          default:
-          $ref: "#/components/responses/Default"
-      
       delete:
         tags:
           - User
@@ -114,13 +107,13 @@ paths:
         summary: User logging
         operationId: userLogin
         parameters:
-          - name: email / username
+        - name: email / username
           in: query
           description: Email or Username to log
           required: true
           schema:
             type: string
-          - name: password
+        - name: password
           in: query
           description: Log password
           required: true
@@ -137,10 +130,10 @@ paths:
           description: Username / password not valid
         '401':
           $ref: "#/components/responses/Disabled"
-          default:
+        default:
           $ref: "#/components/responses/Default"
           
-    /user/:id:
+  /user/:id:
         get:
           tags:
             - User
@@ -163,9 +156,9 @@ paths:
               '401':
               $ref: "#/components/responses/Unauthorized"
               '404':
-              $ref: "#/components/responses/NotFound"
+                $ref: "#/components/responses/NotFound"
               default:
-              $ref: '#/components/responses/Default'
+                $ref: '#/components/responses/Default'
           
           put:
             tags:
