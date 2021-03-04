@@ -10,8 +10,27 @@ router.get('/:id', async (req, res) => {
     const order = await Order.findAll({ where: { id: req.params.id} } );
 
     const newOrderDetail = await Menu.findAll({
-        attributes: ['name', 'price']
+        attributes: ['name', 'price'],
+        include: [
+            {
+              model: OrderDetail,    
+              as: 'menuId',
+              where: { 
+                  order_id: req.params.id                                                                         
+              },
+            },
+          ],
       });
+      console.log(newOrderDetail);
+      
+      let menuPrueba = newOrderDetail.map( (element) => {
+        return { 
+            nombre: element.dataValues.name,
+            price: element.dataValues.price 
+        }
+      });
+
+     console.log(menuPrueba);
     
     res.json({
         order: {

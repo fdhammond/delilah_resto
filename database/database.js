@@ -29,7 +29,7 @@ const OrderDetail = OrderDetailModel(sequelize, Sequelize);
 
 
 User.hasMany(Order, { as: "userId", foreignKey: "user_id"});
-Menu.hasMany(OrderDetail, { foreignKey: "menu_id"});
+Menu.hasMany(OrderDetail, { as: "menuId", foreignKey: "menu_id"});
 Order.hasMany(OrderDetail, { as: "orderId", foreignKey: "order_id"});
 
 

@@ -23,7 +23,7 @@ tags:
     description: Orders data to work with
 
 paths:
-  /users:
+  /user:
     post:
       tags:
         - User
@@ -50,8 +50,8 @@ paths:
       get:
         tags:
           - User
-        summary: (Admin) get list of users / (User) get account info
-        description: Only gets all data of users if admin. If user gets only accounts info
+        summary: (Admin) get list of user / (User) get account info
+        description: Only gets all data of user if admin. If user gets only accounts info
         operationId: getUserInfo
         responses:
         '200':
@@ -106,7 +106,7 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 
-  /users/login:
+  /user/login:
       get:
         tags:
           - User
@@ -140,7 +140,7 @@ paths:
           default:
           $ref: "#/components/responses/Default"
           
-    /users/:id:
+    /user/:id:
         get:
           tags:
             - User
