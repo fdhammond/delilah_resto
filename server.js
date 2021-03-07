@@ -29,7 +29,7 @@ const app = express();
 
 const limiter = rate_limit({
     windowMs: 1 * 60 * 1000, // 1 min
-    max: 2 //2 req
+    max: 50 //2 req
 });
 
 const logRequest = (req, res, next) => {
@@ -41,6 +41,7 @@ app.use(helmet());
 app.use(cors());
 app.use(body_parser.urlencoded({ extended: false }));
 app.use(body_parser.json());
+
 
 app.use(limiter);
 app.use(logRequest);

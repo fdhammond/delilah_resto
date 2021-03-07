@@ -2,8 +2,9 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { User } = require('../../database/database');
 const { check, validationResult } = require('express-validator');
-const moment = require('moment');
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
+
+
 
 router.post('/register', [
     check('name', 'El nombre de usuario es obligatorio').not().isEmpty(),
@@ -28,7 +29,7 @@ router.post('/login', async (req, res) => {
         //Comparo password que viene en el body y la encriptada
         const equals = bcrypt.compareSync(req.body.password, user.password)
         if (equals) {
-            console.log(user.dataValues)
+            //console.log(user.dataValues)
             res.json({ success: createToken(user) });
         } else {
             res.json({ error: 'Error in user or password' })
@@ -41,12 +42,10 @@ router.post('/login', async (req, res) => {
 
 const createToken = (user) => {
     const payload = {
-        usuarioId: user.dataValues,
-        createdAt: moment().unix(),
-        expiredAt: moment().add(12, 'hours').unix()
+        usuarioId: user
     }
 
-    return jwt.encode(payload, 'frase secreta');
+    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 1440 });
 }
 
 module.exports = router;

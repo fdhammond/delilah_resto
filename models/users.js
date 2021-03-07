@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
         adress: DataTypes.STRING,
         password: DataTypes.STRING(150),
         isAdmin: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
+            type: DataTypes.ENUM('admin', 'user'),
+            defaultValue: 'user'
         }
     });
 }
