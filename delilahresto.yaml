@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
-  description: Delilah Resto API
-  version: "1.0.0"
-  title: Delilah Resto API
-  externalDocs:  
-    url: https://github.com/fdhammond/delilah_resto
-  contact:
-    email: federico.hammond8@gmail.com
-    version: 1.0.0
+description: Delilah Resto API
+version: "1.0.0"
+title: Delilah Resto API
+externalDocs:  
+url: https://github.com/fdhammond/delilah_resto
+contact:
+  email: federico.hammond8@gmail.com
+  version: 1.0.0
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -23,10 +23,10 @@ tags:
     description: Orders data to work with
 
 paths:
-  /user/register:
-    post:
-      tags:
-        - User
+/user/register/ 
+  post:
+    tags:
+      - User
       summary: Create User
       description: Create new User        
       operationId: createUser
@@ -99,7 +99,7 @@ paths:
         default:
           $ref: '#/components/responses/Default'
 
-  /user/login:
+  /user/login
       get:
         tags:
           - User
@@ -192,17 +192,17 @@ paths:
           delete:
             tags: 
               - User
-              summary: Delete user (admin allowed)
-              description: This can only be done by a logged in admin.
-              operationId: deleteUserAdmin
-              parameters:
+            summary: Delete user (admin allowed)
+            description: This can only be done by a logged in admin.
+            operationId: deleteUserAdmin
+            parameters:
                 - name: username
                   in: path
                   description: Username to delete
                   required: true
                   schema:
                     type: string
-              responses:
+            responses:
                 200:
                   description: "User {username} was disabled correctly"
                 401:
@@ -211,7 +211,7 @@ paths:
                   $ref: "#/components/responses/NotFound"
                 default:
                   $ref: "#/components/responses/Default"
-    /menu:
+  /menu:
         get: 
           tags:
             - Menus
@@ -495,7 +495,7 @@ components:
         UserInfo:
           type: array
           items: 
-          type: object
+            type: object
           properties:
             user_id:
               type: integer
@@ -651,7 +651,7 @@ components:
                       token:
                         type: string
                         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                  Error:
+                Error:
                     type: object
                     properties:
                       error:
@@ -659,7 +659,7 @@ components:
                         example: "Error ocurred: <error>"
                     required:
                       - error
-                  Send:
+                Send:
                     type: string
                     example: "Error message"
                     

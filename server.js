@@ -49,9 +49,6 @@ app.use('/', apiRouter);
 
 
 
-
-
-
 app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
 });

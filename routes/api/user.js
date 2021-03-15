@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 router.post('/register', [
     check('name', 'El nombre de usuario es obligatorio').not().isEmpty(),
-    check('password', 'El password es obligatorio').not().isEmpty(),
+    check('password', 'El password es obligatorio, debe tener minimo 8 caracteres').not().isEmpty().isLength({ min: 8 }),
     check('email', 'El email debe estar correcto').isEmail()
 ], async (req, res) => {
 

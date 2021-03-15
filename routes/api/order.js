@@ -1,9 +1,11 @@
 const router = require('express').Router();
 const sequelize = require('../../database/database');
+const { isAdminUser } = require('../api/middlewares');
 const { Order } = require('../../database/database');
 const { OrderDetail } = require('../../database/database');
 const { Menu } = require('../../database/database');
 const orderDetails = require('../../models/orderDetails');
+
 
 
 router.get('/:id', async (req, res) => {
@@ -57,9 +59,9 @@ router.post('/newOrder', async (req, res) => {
     res.json(order);
 });
 
-router.delete('/deleteOrder/:id', async (req, res) => {
-    const order = await Order.destroy( { where: { state: 'cancel', id: req.params.id } } );
-    res.json(order);
+router.delete('/deleteOrder/:id', isAdminUser, async (req, res) => {
+    const order = await Order.destroy( { where: { id: req.params.id } } );         
+    const answer = order ? res.json({success: 'Order has been deleted'}) :  res.json({error: 'Order not found.'});
 })
 
 module.exports = router;
