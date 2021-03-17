@@ -1,18 +1,28 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { User } = require('../../database/database');
+const { isAdminUser } = require('../api/middlewares');
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
 
 
+router.get('/', isAdminUser, async (req, res) => {
+    const user = await User.findAll();
+    res.json(user);
+})
+
 router.post('/register', [
-    check('name', 'El nombre de usuario es obligatorio').not().isEmpty().isAlphanumeric().trim(),
+    check('name', 'El nombre de usuario es obligatorio').not().isEmpty()    
+    .isAlphanumeric().withMessage('No puede tener caracteres especiales')
+    .trim()
+    .withMessage('No puede tener espacio en blanco'),
     check('password', 'El password es obligatorio, debe tener minimo 8 caracteres').not().isEmpty().isLength({ min: 8 }),
     check('email', 'El email debe estar correcto').isEmail()
 ], async (req, res) => {
 
     const errors = validationResult(req);
+    
     if(!errors.isEmpty()) {
         //Devuelve el error en formato array
         return res.status(422).json({ errores: errors.array() });

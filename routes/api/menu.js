@@ -28,7 +28,7 @@ router.delete('/newMenu/:id', isAdminUser, async (req, res) => {
     res.json(menu);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAdminUser, async (req, res) => {
     const menu = await Menu.update( 
         {  
             name: req.body.name,

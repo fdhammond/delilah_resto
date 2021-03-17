@@ -1,0 +1,534 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Delilah-Resto
+  description: >-
+    Este proyecto plantea la creación de un sistema de pedidos online para un
+    restaurante
+  contact:
+    name: Federico Hammond
+    email: federico.hammond8@gmail.com
+servers:
+  - url: http://localhost:3000/
+tags: 
+  - name: Users
+    description: Everything about Users
+  - name: Menus
+    description: Everything about menus of restaurant
+  - name: Orders
+    description: Everything about orders of restaurant
+    
+paths:
+  /user/:
+    get:
+      tags: 
+        - Users
+      security: 
+        - bearerAuth: []
+      description: "Return all users from system, only for admin"
+      responses:
+        200:
+          description: list of users
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+  /user/register/:
+    post:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: []        
+      requestBody:
+        description: body with data user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerUser'
+      
+      responses:
+        201:
+          description: user register
+          content:
+            aplication/json:
+              schema:
+                $ref: "#/components/schemas/successfulyRegisterUser"
+  /user/login/:
+    post:
+      tags:
+        - Users
+      requestBody:
+        description: Login user
+        required: true
+        content:
+          aplication/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+      security: 
+        - bearerAuth: []
+      description: "Return all users from system, only for admin"
+      responses:              
+        200:
+          description: list of users
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/loginUser'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'              
+  /menu/:
+    get:
+      tags: 
+        - Menus
+      security: 
+        - bearerAuth: []
+      description: "Return all menus availables from system"
+      responses:
+        200:
+          description: list of menus
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/menus'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+  /menu/newMenu/:
+    post:
+      tags:
+        - Menus
+      requestBody:
+        description: body with menu data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newMenu'
+      security:
+        - bearerAuth: []
+      description: "Add new menu to the list, only admin allowed"
+      responses:
+        200:
+          description: Add new Menu
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/newMenu'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+  /menu/newMenu/id:
+    delete:
+      tags:
+        - Menus
+      security:
+        - bearerAuth: []
+      description: "Delete menu from list, only admin allowed"
+      responses:
+        200:
+          description: Delete menu
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/deleteMenu'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+  /menu/:id:
+    put:
+      tags:
+        - Menus
+      security:
+        - bearerAuth: []
+      description: "Update menu from list, only admin allowed"
+      responses:
+        200:
+          description: Update menu
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/updateMenu'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'        
+  /order/:id:
+    get:
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      description: "Get order from list"
+      responses:
+        200:
+          description: Get order
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/getOrder'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+  /newOrder/:
+    post:
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      description: "Add new Order"
+      responses:
+        200:
+          description: Add new order
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/newOrder'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'       
+  /deleteOrder/:id:
+    delete:
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      description: "Delete selected order"
+      responses:
+        200:
+          description: Delete order
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/deleteOrder'
+        407:
+          description: No authorization token was found
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'
+        401:
+          description: Invalid token
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/invalidToken'
+        403:
+          description: access denied
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/authorization'      
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: "Ok"
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              first_name:
+                type: string
+                example: "Pepito"
+              last_name:
+                type: string
+                example: "Juarez"
+              email:
+                type: string
+                example: "pepito@example.com"
+              phone_number: 
+                type: string
+                example: "0115478965"
+              home_address:
+                type: string
+                example: "Clarin 2020"
+              is_admin:
+                type: boolean
+                example: true
+    registerUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Pepito"
+        email:
+          type: string
+          example: "pepito@gmail.com"
+        phone:
+          type: string
+          example: "0110303456"
+        address:
+          type: string
+          example: "Callao 256"
+        password:
+          type: string
+          example: "12345678"
+    successfulyRegisterUser:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/meta'
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            fullName:
+              type: string
+              example: "Pepito Rodriguez"
+            user:
+              type: string
+              example: "pepito@example.com"
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+          example: pepito@gmail.com
+        password:
+          type: string
+          example: "12345678"
+    menus:
+      type: array
+      items: 
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          name:
+            type: string
+            example: "Pizza Napolitana"
+          price:
+            type: string
+            example: "2500"
+    newMenu:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Pizza Napolitana"
+        price:
+          type: string
+          example: "2500"
+    deleteMenu:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+    updateMenu:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: "Sandwitch Veggie"
+        price:
+          type: string
+          example: "1200"
+    getOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+    newOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        payment_method:
+          type: string
+          example: "card"
+        user_id:
+          type: integer
+          example: 1
+    deleteOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        
+            
+    authorization:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 407
+        message: 
+          type: string
+          example: "No authorization token was found"
+    invalidToken:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/meta'
+        error:
+          $ref: "#/components/schemas/error"
+    meta:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 401
+        message: 
+          type: string
+          example: "Invalid token!!"
+    error:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "TokenExpiredError"
+        message: 
+          type: string
+          example: "jwt expired"    
+    
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

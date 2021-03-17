@@ -12,8 +12,8 @@ sequelize.query("SELECT * FROM details").then( res => {
 
 const express = require('express');
 const body_parser = require('body-parser');
-const cors = require('cors');
 const helmet = require('helmet');
+const cors = require('cors');
 const rate_limit = require('express-rate-limit');
 const jsonWebToken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
