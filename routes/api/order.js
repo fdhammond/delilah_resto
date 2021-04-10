@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const sequelize = require('../../database/database');
-const { isAdminUser } = require('../api/middlewares');
+const { isAdminUser, authenticateToken } = require('../api/middlewares');
 const { Order } = require('../../database/database');
 const { OrderDetail } = require('../../database/database');
 const { Menu } = require('../../database/database');
 const orderDetails = require('../../models/orderDetails');
+
 
 
 
@@ -43,11 +44,12 @@ router.get('/:id', async (req, res) => {
     });
 });
 
-router.post('/newOrder', async (req, res) => {
+router.post('/newOrder', authenticateToken, async (req, res) => {
     let menu = req.body.order.menu;
+
     const order = await Order.create({
         payment_method: req.body.order.payment_method,
-        user_id: req.body.order.user_id        
+        user_id: req.user.usuarioId.id        
     });
     menu.forEach( async (element) => {
         await OrderDetail.create({

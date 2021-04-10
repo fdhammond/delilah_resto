@@ -47,7 +47,6 @@ sequelize
     console.log(err);
   });
 
-
 module.exports = {
     User,
     Menu,
