@@ -245,8 +245,52 @@ se debera agregar el archivo .env, sino no funcionara )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+--/* MENU */--
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+- VER MENUS DISPONIBLES
 
+---- SELECCIONAR REQUEST "GET MENU"
+
+- SELECCIONAR METHODO "GET"
+    - Agregar direccion url: "http://localhost:3000/menu"
+    
+    - CLICK "BOTON" SEND
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+- EDITAR MENU
+
+- SELECCIONAR METODO "PUT":
+    - Agregar direccion url: "http://localhost:3000/menu/id"
+    - Reemplazar "/id" por el numero de orden a editar
+    - Seleccionar "Authorization" - Type: "Bearer Token"
+        - Pegar el token copiado anteriormente en el login de admin
+        ( sin el token no podemos realizar la accion )
+
+    - Seleccionar "Body" luego "x-www-form-urlencoded" y por ultimo JSON
+        - Agregar estructura para realizar la orden:
+            - Agregar "key" = name  //  "value" = nombre de menu. 
+            - Agregar "key" = price  //  "value" = nuevo precio. (ej: 700) 
+
+    - CLICK "BOTON" SEND
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+- ELIMINAR MENU
+
+- SELECCIONAR METODO "DELETE":
+    - Agregar direccion url: "http://localhost:3000/menu/id"
+    - Reemplazar "/id" por el numero de orden a eliminar
+    - Seleccionar "Authorization" - Type: "Bearer Token"
+        - Pegar el token copiado anteriormente en el login de admin
+        ( sin el token no podemos realizar la accion )
+
+    - CLICK "BOTON" SEND
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
