@@ -61,9 +61,21 @@ router.post('/newOrder', authenticateToken, async (req, res) => {
     res.json(order);
 });
 
-router.delete('/deleteOrder/:id', isAdminUser, async (req, res) => {
+router.put('/:id', isAdminUser, async (req, res) => {
+    const order = await Order.update( 
+        {  
+            state: req.body.state,
+            payment_method: req.body.payment_method
+        },
+        { where: { id: req.params.id } }
+    );
+    res.json(order);
+});
+
+router.delete('/:id', isAdminUser, async (req, res) => {
     const order = await Order.destroy( { where: { id: req.params.id } } );         
     const answer = order ? res.json({success: 'Order has been deleted'}) :  res.json({error: 'Order not found.'});
+    res.json(answer)
 })
 
 module.exports = router;

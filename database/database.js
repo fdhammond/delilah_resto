@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize');
-
 const UserModel = require('../models/users');
 const MenuModel = require('../models/menus');
 const OrderModel = require('../models/orders');
 const OrderDetailModel = require('../models/orderDetails');
 
 
-//VER VARIABLES DE ENTORNO ACA.
 const sequelize = new Sequelize('delilah_resto', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 function isAdminUser(req, res, next) {     
     const token = req.headers.authorization.split(' ')[1];
 
-    const tokenVerify = jsonWebToken.verify(token, process.env.SECRET_KEY);
+    const tokenVerify = jwt.verify(token, process.env.SECRET_KEY);
 
     if (tokenVerify.usuarioId.isAdmin != 'admin') {
         return res.status(403).send('Access denied, you dont have permission.');

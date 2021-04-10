@@ -3,13 +3,6 @@ require('dotenv').config();
 const sequelize = require('./database/database');
 
 
-//Es un objeto sequelize = new Sequelize;
-/*
-sequelize.query("SELECT * FROM details").then( res => {
-    console.log(res);
-});
-*/
-
 const express = require('express');
 const body_parser = require('body-parser');
 const helmet = require('helmet');
