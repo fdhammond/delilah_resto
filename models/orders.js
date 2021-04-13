@@ -9,16 +9,19 @@ module.exports = (sequelize, type) => {
             type: type.ENUM('new','confirm', 'cancel', 'delivered'),
             defaultValue: 'new'
         },
-        payment_method: type.ENUM('cash', 'card'),
+        payment_method: { 
+            type: type.ENUM('cash', 'card'),
+            defaultValue: 'cash'
+        },
         createdAt:{
             type: 'TIMESTAMP',
             defaultValue: type.literal('CURRENT_TIMESTAMP(3)'),
-            allowNull: false
+            allowNull: true
         },
         updatedAt:{
             type: 'TIMESTAMP',
             defaultValue: type.literal('CURRENT_TIMESTAMP(3)'),
-            allowNull: false
+            allowNull: true
         }
     });
     return Model;

@@ -54,7 +54,7 @@ const createToken = (user) => {
         usuarioId: user
     }    
 
-    return jsonWebToken.sign(payload, process.env.SECRET_KEY, { expiresIn: 1440 });
+    return jsonWebToken.sign(payload, process.env.SECRET_KEY, { expiresIn: '365d' });
 }
 
 

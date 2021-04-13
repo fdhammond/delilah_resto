@@ -34,29 +34,32 @@ router.get('/:id', async (req, res) => {
       });
 
      console.log(menuPrueba);
-    
+      console.log(order)
     res.json({
+        /*
         order: {
-            status: order.status,
+            status: order.state,
             user: order.user_id,
-            menu: newOrderDetail
+            menu: menuPrueba
         }
+        */
+       order
     });
 });
 
 router.post('/newOrder', authenticateToken, async (req, res) => {
-    let menu = req.body.order.menu;
+    //let menu = req.body.order.menu;
 
     const order = await Order.create({
-        payment_method: req.body.order.payment_method,
+        payment_method: req.body.payment_method,
         user_id: req.user.usuarioId.id        
     });
-    menu.forEach( async (element) => {
-        await OrderDetail.create({
-            order_id: order.id,
-            menu_id: element.id
-        })
-    });
+    // menu.forEach( async (element) => {
+    //     await OrderDetail.create({
+    //         order_id: order.id,
+    //         menu_id: element.id
+    //     })
+    // });
 
     res.json(order);
 });
@@ -74,7 +77,13 @@ router.put('/:id', isAdminUser, async (req, res) => {
 
 router.delete('/:id', isAdminUser, async (req, res) => {
     const order = await Order.destroy( { where: { id: req.params.id } } );         
-    const answer = order ? res.json({success: 'Order has been deleted'}) :  res.json({error: 'Order not found.'});
+    //const answer = order ? res.json({success: 'Order has been deleted'}) : res.json({error: 'Order not found.'});
+
+    if (order) {
+        return res.json({success: 'Order has been deleted'})
+    } else {
+        res.json({error: 'Order not found.'});
+    }
     res.json(answer)
 })
 

@@ -76,6 +76,8 @@ paths:
     post:
       tags:
         - Users
+      security:
+        - bearerAuth: []
       requestBody:
         description: Login user
         required: true
@@ -83,34 +85,13 @@ paths:
           aplication/json:
             schema:
               $ref: '#/components/schemas/loginUser'
-      security: 
-        - bearerAuth: []
-      description: "Return all users from system, only for admin"
       responses:              
         200:
-          description: list of users
+          description: user login
           content:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/loginUser'
-        407:
-          description: No authorization token was found
-          content:
-            aplication/json:
-              schema:
-                $ref: '#/components/schemas/authorization'
-        401:
-          description: Invalid token
-          content:
-            aplication/json:
-              schema:
-                $ref: '#/components/schemas/invalidToken'
-        403:
-          description: access denied
-          content:
-            aplication/json:
-              schema:
-                $ref: '#/components/schemas/authorization'              
   /menu/:
     get:
       tags: 
@@ -182,7 +163,7 @@ paths:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/authorization'
-  /menu/newMenu/id:
+  /menu/newMenu/:id:
     delete:
       tags:
         - Menus
@@ -246,10 +227,16 @@ paths:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/authorization'        
-  /order/:id:
+  /order/{id}:
     get:
       tags:
         - Orders
+      parameters:
+      - in: path
+        name: id 
+        schema:
+          type: integer
+        required: true
       security:
         - bearerAuth: []
       description: "Get order from list"
@@ -278,10 +265,17 @@ paths:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/authorization'
-  /newOrder/:
+  /order/newOrder/:
     post:
       tags:
         - Orders
+      requestBody:
+        description: Add new order
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newOrder'        
       security:
         - bearerAuth: []
       description: "Add new Order"
@@ -310,13 +304,19 @@ paths:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/authorization'       
-  /deleteOrder/:id:
+  /order/deleteOrder/:
     delete:
       tags:
         - Orders
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: integer
+        required: true
       security:
         - bearerAuth: []
-      description: "Delete selected order"
+      description: "Delete selected order, only admin allowed"
       responses:
         200:
           description: Delete order
@@ -419,10 +419,12 @@ components:
               example: "pepito@example.com"
     loginUser:
       type: object
+      items:
+        type: string
       properties:
         email:
           type: string
-          example: pepito@gmail.com
+          example: "pepito@gmail.com"
         password:
           type: string
           example: "12345678"
@@ -476,20 +478,21 @@ components:
     newOrder:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
         payment_method:
           type: string
-          example: "card"
-        user_id:
-          type: integer
-          example: 1
+          enum:
+          - cash
+          - card
+          example: "cash"
+        menu:
+          type: object
+          example: [ {  id: 4  } ]
     deleteOrder:
       type: object
       properties:
         id:
           type: integer
+          example: 28
         
             
     authorization:
@@ -531,4 +534,4 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      bearerFormat: JWT 
