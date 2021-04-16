@@ -304,13 +304,13 @@ paths:
             aplication/json:
               schema:
                 $ref: '#/components/schemas/authorization'       
-  /order/deleteOrder/:
+  /order/deleteOrder/{orderId}:
     delete:
       tags:
         - Orders
       parameters:
-      - in: query
-        name: id
+      - in: path
+        name: orderId
         schema:
           type: integer
         required: true
@@ -491,8 +491,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          example: 28
+          type: string
+          example: 50
         
             
     authorization:

@@ -75,16 +75,25 @@ router.put('/:id', isAdminUser, async (req, res) => {
     res.json(order);
 });
 
-router.delete('/:id', isAdminUser, async (req, res) => {
-    const order = await Order.destroy( { where: { id: req.params.id } } );         
-    //const answer = order ? res.json({success: 'Order has been deleted'}) : res.json({error: 'Order not found.'});
+router.delete('/deleteOrder/:id', isAdminUser, async (req, res) => {
+     const order = await Order.destroy( { where: {  id: req.params.id  }} );        
+    // console.log(order)
+    // //const answer = order ? res.json({success: 'Order has been deleted'}) : res.json({error: 'Order not found.'});
 
-    if (order) {
-        return res.json({success: 'Order has been deleted'})
-    } else {
-        res.json({error: 'Order not found.'});
-    }
-    res.json(answer)
+    //  if (order) {
+    //       res.json({success: 'Order has been deleted'})
+    //  } else {
+    //      res.json({error: 'Order not found.'});
+    //  }
+     
+    // res.json(order)
+    // if (!order) {
+    //     res.json('err')
+    // } else {
+    //     order.destroy();
+    //     res.json(order);
+    // }
+    res.json(order)
 })
 
 module.exports = router;
