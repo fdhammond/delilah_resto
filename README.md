@@ -1,6 +1,6 @@
 -- Delilah Resto V1.0 --
 
--- Repo Git: https://github.com/fdhammond/delilah_resto.git
+-- Repo Git: https://github.com/fdhammond/delilah_resto
 
 ( En caso de clonar el repo en vez de utilizar los archivos enviados en rar
 se debera agregar el archivo .env, sino no funcionara )
