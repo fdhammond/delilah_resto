@@ -10,57 +10,69 @@ const orderDetails = require('../../models/orderDetails');
 
 
 router.get('/:id', async (req, res) => {
-    const order = await Order.findAll({ where: { id: req.params.id} } );
+    const order = await Order.findAll({ where: { id: req.params.id } } );
 
-    const newOrderDetail = await Menu.findAll({
+    const newOrderDetail = await OrderDetail.findAll({
+        attributes: ['menu_id', 'quantity'],
+        where: {
+            order_id: req.params.id            
+        }
+      });
+      /*
+      const menuPrueba = newOrderDetail.map( (element) => {
+        return { 
+            nombre: element.dataValues.name,
+            price: element.dataValues.price,           
+            quantity: element.dataValues.quantity
+        }
+      });
+      */
+      
+//SELECT name FROM menus INNER JOIN orderdetails ON orderdetails.order_id = 2 AND menus.id = menu_id 
+
+      const detailMenu = await Menu.findAll({
         attributes: ['name', 'price'],
         include: [
             {
               model: OrderDetail,    
-              as: 'menuId',
               where: { 
                   order_id: req.params.id                                                                         
               },
             },
           ],
-      });
-      console.log(newOrderDetail);
-      
-      let menuPrueba = newOrderDetail.map( (element) => {
-        return { 
-            nombre: element.dataValues.name,
-            price: element.dataValues.price 
-        }
-      });
+      })
 
-     console.log(menuPrueba);
-      console.log(order)
+
     res.json({
-        /*
+        
         order: {
-            status: order.state,
-            user: order.user_id,
-            menu: menuPrueba
+            details: order,            
+            menus: detailMenu
         }
-        */
-       order
+        
+       //order
     });
 });
 
 router.post('/newOrder', authenticateToken, async (req, res) => {
-    //let menu = req.body.order.menu;
-
+    let menu = req.body.order.menu;
+    console.log(req.user)
+    
     const order = await Order.create({
         payment_method: req.body.payment_method,
-        user_id: req.user.usuarioId.id        
+        user_id: req.user.usuarioId.id       
+        
     });
-    // menu.forEach( async (element) => {
-    //     await OrderDetail.create({
-    //         order_id: order.id,
-    //         menu_id: element.id
-    //     })
-    // });
-
+    menu.forEach( async (element) => {
+         await OrderDetail.create({
+             order_id: order.id,
+             menu_id: element.id,
+             quantity: element.quantity
+         })
+     });
+     
+    //  console.log(order)
+    //  console.log(menu)
     res.json(order);
 });
 

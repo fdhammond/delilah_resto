@@ -4,6 +4,9 @@ module.exports = (sequelize, type) => {
             type: type.INTEGER,
             primaryKey: true,
             autoIncrement: true
+        },
+        quantity: {
+            type: type.INTEGER
         }
     });
 }
