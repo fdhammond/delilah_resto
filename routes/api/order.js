@@ -18,30 +18,27 @@ router.get('/:id', async (req, res) => {
             order_id: req.params.id            
         }
       });
-      /*
-      const menuPrueba = newOrderDetail.map( (element) => {
-        return { 
-            nombre: element.dataValues.name,
-            price: element.dataValues.price,           
-            quantity: element.dataValues.quantity
-        }
-      });
-      */
       
-//SELECT name FROM menus INNER JOIN orderdetails ON orderdetails.order_id = 2 AND menus.id = menu_id 
-
       const detailMenu = await Menu.findAll({
-        attributes: ['name', 'price'],
+        attributes:  {
+            include: ['name', 'price'],
+            exclude: ['description', 'createdAt', 'updatedAt']  
+        },
         include: [
             {
-              model: OrderDetail,    
+              model: OrderDetail,
+              attributes: {
+                include: ['quantity'],
+                exclude: ['id', 'createdAt', 'updatedAt', 'menu_id', 'order_id']
+              }, 
               where: { 
-                  order_id: req.params.id                                                                         
+                  order_id: req.params.id                                                                     
               },
             },
           ],
       })
 
+      
 
     res.json({
         
@@ -49,8 +46,6 @@ router.get('/:id', async (req, res) => {
             details: order,            
             menus: detailMenu
         }
-        
-       //order
     });
 });
 
@@ -70,9 +65,6 @@ router.post('/newOrder', authenticateToken, async (req, res) => {
              quantity: element.quantity
          })
      });
-     
-    //  console.log(order)
-    //  console.log(menu)
     res.json(order);
 });
 
