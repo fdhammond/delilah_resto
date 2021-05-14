@@ -106,7 +106,7 @@ se debera agregar el archivo .env, sino no funcionara )
                 - {
                     "order": {
                     "payment_method": "cash",
-                    "menu": [{ "id": 1 }]
+                    "menu": [{ "id": 1, "quantity": 2 }]
                     }        
                   }
 
@@ -115,7 +115,7 @@ se debera agregar el archivo .env, sino no funcionara )
     - Datos a completar:
         - payment_method: (metodo de pago: puede ser "cash" o "card")  
         - menu: (en caso de querer agregar mas menus se debera respetar la siguiente estructura:
-            [{ "id": 1 }, { "id": 2 }, { "id": 3 }]
+            [{ "id": 1, "quantity": 2 }, { "id": 2, "quantity": 3 }, { "id": 3, "quantity": 4 }]
         )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////        

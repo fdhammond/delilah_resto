@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-04-2021 a las 16:34:34
+-- Tiempo de generación: 14-05-2021 a las 17:23:23
 -- Versión del servidor: 10.4.17-MariaDB
 -- Versión de PHP: 8.0.1
 
@@ -41,13 +41,13 @@ CREATE TABLE `menus` (
 --
 
 INSERT INTO `menus` (`id`, `name`, `price`, `description`, `createdAt`, `updatedAt`) VALUES
-(1, 'Bagel de Salmón', 425, NULL, '2021-03-03 01:33:54', '2021-03-08 01:16:23'),
-(2, 'Hamburguesa Clásica', 350, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54'),
-(3, 'Sandwich Veggie', 310, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54'),
-(4, 'Ensalada Veggie', 340, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54'),
-(5, 'Focaccia', 300, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54'),
-(6, 'Sandwich Focaccia', 440, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54'),
-(7, 'Veggie Avocado', 310, NULL, '2021-03-03 01:33:54', '2021-03-03 01:33:54');
+(1, 'Bagel de Salmón', 425, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(2, 'Hamburguesa Clásica', 350, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(3, 'Sandwich Veggie', 310, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(4, 'Ensalada Veggie', 340, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(5, 'Focaccia', 300, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(6, 'Sandwich Focaccia', 440, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39'),
+(7, 'Veggie Avocado', 310, NULL, '2021-05-11 22:08:39', '2021-05-11 22:08:39');
 
 -- --------------------------------------------------------
 
@@ -57,11 +57,31 @@ INSERT INTO `menus` (`id`, `name`, `price`, `description`, `createdAt`, `updated
 
 CREATE TABLE `orderdetails` (
   `id` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `menu_id` int(11) DEFAULT NULL,
   `order_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `orderdetails`
+--
+
+INSERT INTO `orderdetails` (`id`, `quantity`, `createdAt`, `updatedAt`, `menu_id`, `order_id`) VALUES
+(7, 1, '2021-05-11 22:33:40', '2021-05-11 22:33:40', 1, 4),
+(8, 5, '2021-05-11 22:33:40', '2021-05-11 22:33:40', 2, 4),
+(9, 1, '2021-05-11 23:38:41', '2021-05-11 23:38:41', 1, 5),
+(10, 25, '2021-05-11 23:38:41', '2021-05-11 23:38:41', 2, 5),
+(11, 2, '2021-05-11 23:38:41', '2021-05-11 23:38:41', 4, 5),
+(12, 15, '2021-05-11 23:38:41', '2021-05-11 23:38:41', 7, 5),
+(13, 1, '2021-05-14 16:46:36', '2021-05-14 16:46:36', 1, 6),
+(14, 25, '2021-05-14 16:46:36', '2021-05-14 16:46:36', 2, 6),
+(15, 2, '2021-05-14 16:46:36', '2021-05-14 16:46:36', 4, 6),
+(16, 15, '2021-05-14 16:46:36', '2021-05-14 16:46:36', 7, 6),
+(17, 4, '2021-05-14 16:46:36', '2021-05-14 16:46:36', 5, 6),
+(18, 1, '2021-05-14 17:14:20', '2021-05-14 17:14:20', 1, 7),
+(19, 25, '2021-05-14 17:14:20', '2021-05-14 17:14:20', 2, 7);
 
 -- --------------------------------------------------------
 
@@ -72,11 +92,21 @@ CREATE TABLE `orderdetails` (
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `state` enum('new','confirm','cancel','delivered') DEFAULT 'new',
-  `payment_method` enum('cash','card') DEFAULT NULL,
+  `payment_method` enum('cash','card') DEFAULT 'cash',
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `orders`
+--
+
+INSERT INTO `orders` (`id`, `state`, `payment_method`, `createdAt`, `updatedAt`, `user_id`) VALUES
+(4, 'new', 'cash', '2021-05-11 20:33:40', '2021-05-11 20:33:40', 2),
+(5, 'new', 'cash', '2021-05-11 21:38:41', '2021-05-11 21:38:41', 2),
+(6, 'new', 'cash', '2021-05-14 14:46:36', '2021-05-14 14:46:36', 2),
+(7, 'new', 'cash', '2021-05-14 15:14:20', '2021-05-14 15:14:20', 2);
 
 -- --------------------------------------------------------
 
@@ -101,8 +131,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `address`, `password`, `isAdmin`, `createdAt`, `updatedAt`) VALUES
-(1, 'admin', 'admin@gmail.com', '12345678', 'Admin adress', '$2a$10$Lv3wU7e9hJ/tzyMgqWt0qOX2Wm4897aINluAdqKAR7n7bDaPqgJvu', 'admin', '2021-03-17 03:53:48', '2021-03-17 03:53:48'),
-(2, 'Pepito', 'pepito@gmail.com', '0110303456', 'Callao 256', '$2a$10$.c4mFU/Hb/uztSe3y8KaV.UfZ1BXL8E0wPoADc0wX6mLZ6cbZSmo2', 'user', '2021-03-17 03:54:31', '2021-03-17 03:54:31');
+(1, 'admin', 'admin@gmail.com', '12345678', 'admin adress', '$2a$10$4NiPvhESMq11cmVv6jS05.Gc6tH6p.GUWcr5T4FyIb.gk1kgX.Ys.', 'admin', '2021-05-11 22:09:00', '2021-05-11 22:09:00'),
+(2, 'pedrito', 'pedrito@gmail.com', '12345678', 'admin adress', '$2a$10$xH9VInpLtHuuL8HhiGpksewWA9JFFIc13EisZuzfZQvM4x8V6Jkq6', 'user', '2021-05-11 22:10:00', '2021-05-11 22:10:00');
 
 --
 -- Índices para tablas volcadas
@@ -143,19 +173,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `orderdetails`
 --
 ALTER TABLE `orderdetails`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
